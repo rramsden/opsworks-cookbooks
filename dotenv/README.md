@@ -1,4 +1,4 @@
-Dotenv Cookbook
+dotenv Cookbook
 ===============
 
 This cookbook writes out an .env file in your application root from values
