@@ -6,6 +6,7 @@ default[:delayed_job][:suffix] = ""
 default[:delayed_job][:options] = ""
 
 node[:deploy].each do |application, deploy|
+  Chef::Log.debug("poolsize is #{deploy[:delayed_job][:pool_size]}")
   if deploy[:delayed_job][:pool_size]
     default[:delayed_job][:workers] = deploy[:delayed_job][:pool_size].times.map{ {} }
   end
