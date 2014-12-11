@@ -13,7 +13,9 @@ node[:deploy].each do |application, deploy|
   deploy = node[:deploy][application]
   default = node[:delayed_job]
 
-  workers = if deploy[:workers]
+  Chef::Log.debug("DELAYEDJOB::: Workers hash is #{default[:workers]}")
+
+  workers = if default[:workers]
     default[:workers].each_with_index.map do |worker, i|
       identifier = worker[:identifier] || i
       {
