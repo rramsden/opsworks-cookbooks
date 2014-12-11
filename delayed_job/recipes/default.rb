@@ -11,26 +11,21 @@ include_recipe 'deploy'
 
 node[:deploy].each do |application, deploy|
   deploy = node[:deploy][application]
+  default = node[:delayed_job]
 
-  global = node[:delayed_job] || {}
-
-  if deploy[:delayed_job].is_a?(Array)
-    index = 0
-    workers = deploy[:delayed_job].map do |dj|
-      index += 1
-      identifier = dj[:identifier] || index
+  workers = if default[:workers]
+    default[:workers].each_with_index.map do |worker, i|
+      identifier = worker[:identifier] || i
       {
-        :timeout => dj[:timeout] || global[:timeout],
-        :bin => dj[:bin] || global[:bin],
+        :timeout => worker[:timeout] || default[:timeout],
+        :bin => worker[:bin] || default[:bin],
         :identifier => identifier,
         :suffix => ".#{identifier}",
-        :options => dj[:options] || global[:options]
+        :options => worker[:options] || default[:options]
       }
     end
   else
-    # For backwards compatability with existing json
-    # :delayed_job => true
-    workers = [global]
+    [default]
   end
 
   template "/etc/monit.d/#{application}_delayed_job.monitrc" do
