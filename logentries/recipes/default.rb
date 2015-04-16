@@ -14,14 +14,17 @@ cookbook_file '/etc/ssl/certs/logentries.all.crt' do
   mode '0755'
 end
 
+logentries = node[:deploy].map{ |e| e[1][:logentries] }.compact.first
+
 template '/etc/rsyslog.d/logentries.conf' do
   source 'logentries.conf.erb'
   owner 'root'
   group 'root'
   mode '0755'
   variables(
-    :token => node[:deploy][:hats][:logentries][:token]
+    :token => logentries[:token]
   )
+  only_if { logentries }
 end
 
 bash 'install-rsyslog-gnutls' do
