@@ -57,9 +57,14 @@ server {
     deny all;
   }
 
-  error_page 500 502 503 504 /500.html;
+  error_page 500 502 504 /500.html;
   location = /500.html {
     root <%= @application[:absolute_document_root] %>;
+  }
+
+  error_page 503 @maintenance;
+  location @maintenance {
+    rewrite ^(.*)$ /503.html break;
   }
 }
 
@@ -113,9 +118,14 @@ server {
     }
   }
 
-  error_page 500 502 503 504 /500.html;
+  error_page 500 502 504 /500.html;
   location = /500.html {
     root <%= @application[:absolute_document_root] %>;
+  }
+
+  error_page 503 @maintenance;
+  location @maintenance {
+    rewrite ^(.*)$ /503.html break;
   }
 }
 <% end %>
