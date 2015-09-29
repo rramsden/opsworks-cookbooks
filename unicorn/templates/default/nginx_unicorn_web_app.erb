@@ -23,6 +23,18 @@ server {
   <% end %>
 
   if (-f $document_root/offline) {
+    set $action "maintenance";
+  }
+
+  if ($request_uri ~ /health_check) {
+    set $action "${action}_health_check";
+  }
+
+  if ($action = "maintenance_health_check") {
+    return 200;
+  }
+
+  if ($action = "maintenance") {
     return 503;
   }
 
@@ -90,6 +102,18 @@ server {
   <% end %>
 
   if (-f $document_root/offline) {
+    set $action "maintenance";
+  }
+
+  if ($request_uri ~ /health_check) {
+    set $action "${action}_health_check";
+  }
+
+  if ($action = "maintenance_health_check") {
+    return 200;
+  }
+
+  if ($action = "maintenance") {
     return 503;
   }
 
