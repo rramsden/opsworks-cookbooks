@@ -94,6 +94,7 @@ server {
   <% end -%>
 
   keepalive_timeout 5;
+  recursive_error_pages on;
 
   root <%= @application[:absolute_document_root] %>;
 
@@ -149,6 +150,7 @@ server {
 
   error_page 503 @maintenance;
   location @maintenance {
+    error_page 405 = /503.html;
     rewrite ^(.*)$ /503.html break;
   }
 }
